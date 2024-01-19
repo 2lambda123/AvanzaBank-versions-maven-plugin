@@ -11,6 +11,8 @@ This is the [versions-maven-plugin](http://www.mojohaus.org/versions-maven-plugi
 
 ### Creating Issues
 
+If you encounter a GitHub Actions run failure, please create an issue in the ticket system and include the error logs. For instructions on how to access and provide the error logs, see the section below.
+
 If you find a problem please create an 
 [issue in the ticket](https://github.com/mojohaus/versions-maven-plugin/issues)
 and describe what is going wrong or what you expect to happen.
@@ -49,7 +51,11 @@ hard or to be honest impossible.
 * Make sure `gpg-agent` is running.
 * Execute `./mvnw -B release:prepare release:perform`
 
-For publishing the site do the following:
+For publishing the site and providing error logs for troubleshooting, follow the steps below:
+
+### Accessing and Providing Error Logs
+
+If a GitHub Actions run failure occurs, please follow the steps below to access and provide the error logs:
 
 ```
 cd target/checkout
