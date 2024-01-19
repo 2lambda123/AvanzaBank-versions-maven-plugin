@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.FileUtils;
@@ -34,138 +33,119 @@ import org.codehaus.plexus.util.FileUtils;
  * @author Stephen Connolly
  */
 public abstract class AbstractVersionsDisplayMojo
-    extends AbstractVersionsUpdaterMojo
-{
+    extends AbstractVersionsUpdaterMojo {
 
-    private static final int DEFAULT_DISPLAY_TERMINAL_WIDTH = 80;
+  private static final int DEFAULT_DISPLAY_TERMINAL_WIDTH = 80;
 
-    /**
-     * If specified then the display output will be sent to the specified file.
-     *
-     * @since 2.2
-     */
-    @Parameter( property = "versions.outputFile" )
-    private File outputFile;
+  /**
+   * If specified then the display output will be sent to the specified file.
+   *
+   * @since 2.2
+   */
+  @Parameter(property = "versions.outputFile") private File outputFile;
 
-    /**
-     * Controls whether the display output is logged to the console.
-     *
-     * @since 2.2
-     */
-    @Parameter( property = "versions.logOutput", defaultValue = "true" )
-    private boolean logOutput;
+  /**
+   * Controls whether the display output is logged to the console.
+   *
+   * @since 2.2
+   */
+  @Parameter(property = "versions.logOutput", defaultValue = "true")
+  private boolean logOutput;
 
-    /**
-     * The character encoding to use when writing to {@link #outputFile}.
-     *
-     * @since 2.2
-     */
-    @Parameter( property = "outputEncoding", defaultValue = "${project.reporting.outputEncoding}" )
-    private String outputEncoding;
+  /**
+   * The character encoding to use when writing to {@link #outputFile}.
+   *
+   * @since 2.2
+   */
+  @Parameter(property = "outputEncoding",
+             defaultValue = "${project.reporting.outputEncoding}")
+  private String outputEncoding;
 
-    /**
-     * Terminal width which should be used to format the padding of the version info list output.
-     *
-     * @since 2.10.0
-     */
-    @Parameter( property = "versions.displayTerminalWidth", defaultValue = AbstractVersionsDisplayMojo.DEFAULT_DISPLAY_TERMINAL_WIDTH + "" )
-    private int displayTerminalWidth;
+  /**
+   * Terminal width which should be used to format the padding of the version
+   * info list output.
+   *
+   * @since 2.10.0
+   */
+  @Parameter(property = "versions.displayTerminalWidth",
+             defaultValue =
+                 AbstractVersionsDisplayMojo.DEFAULT_DISPLAY_TERMINAL_WIDTH +
+                 "")
+  private int displayTerminalWidth;
 
-    private boolean outputFileError = false;
+  private boolean outputFileError = false;
 
-    protected void logInit()
-    {
-        if ( outputFile != null && !outputFileError )
-        {
-            if ( outputFile.isFile() )
-            {
-                final String key = AbstractVersionsDisplayMojo.class.getName() + ".outputFile";
-                String outputFileName;
-                try
-                {
-                    outputFileName = outputFile.getCanonicalPath();
-                }
-                catch ( IOException e )
-                {
-                    outputFileName = outputFile.getAbsolutePath();
-                }
-                Set<String> files = (Set<String>) getPluginContext().get( key );
-                if ( files == null )
-                {
-                    files = new LinkedHashSet<>();
-                }
-                else
-                {
-                    files = new LinkedHashSet<>( files );
-                }
-                if ( !files.contains( outputFileName ) )
-                {
-                    if ( !outputFile.delete() )
-                    {
-                        getLog().error( "Cannot delete " + outputFile + " will append instead" );
-                    }
-                }
-                files.add( outputFileName );
-                getPluginContext().put( key, files );
-            }
-            else
-            {
-                if ( outputFile.exists() )
-                {
-                    getLog().error( "Cannot send output to " + outputFile + " as it exists but is not a file" );
-                    outputFileError = true;
-                }
-                else if ( !outputFile.getParentFile().isDirectory() )
-                {
-                    if ( !outputFile.getParentFile().mkdirs() )
-                    {
-                        outputFileError = true;
-                    }
-                }
-            }
-            if ( !outputFileError && StringUtils.isBlank( outputEncoding ) )
-            {
-                outputEncoding = System.getProperty( "file.encoding" );
-                getLog().warn( "File encoding has not been set, using platform encoding " + outputEncoding
-                    + ", i.e. build is platform dependent!" );
-            }
+  protected void logInit() {
+    if (outputFile != null && !outputFileError) {
+      if (outputFile.isFile()) {
+        final String key =
+            AbstractVersionsDisplayMojo.class.getName() + ".outputFile";
+        String outputFileName;
+        try {
+          outputFileName = outputFile.getCanonicalPath();
+        } catch (IOException e) {
+          outputFileName = outputFile.getAbsolutePath();
         }
-    }
-
-    protected void logLine( boolean error, String line )
-    {
-        if ( logOutput )
-        {
-            if ( error )
-            {
-                getLog().error( line );
-            }
-            else
-            {
-                getLog().info( line );
-            }
+        Set<String> files = (Set<String>)getPluginContext().get(key);
+        if (files == null) {
+          files = new LinkedHashSet<>();
+        } else {
+          files = new LinkedHashSet<>(files);
         }
-        if ( outputFile != null && !outputFileError )
-        {
-            try
-            {
-                FileUtils.fileAppend( outputFile.getAbsolutePath(), outputEncoding,
-                                      error ? "> " + line + System.getProperty( "line.separator" )
-                                                      : line + System.getProperty( "line.separator" ) );
-            }
-            catch ( IOException e )
-            {
-                getLog().error( "Cannot send output to " + outputFile, e );
-                outputFileError = true;
-            }
+        if (!files.contains(outputFileName)) {
+          if (!outputFile.delete()) {
+            getLog().error("Cannot delete " + outputFile +
+                           " will append instead");
+          }
         }
+        files.add(outputFileName);
+        getPluginContext().put(key, files);
+      } else {
+        if (outputFile.exists()) {
+          getLog().error("Cannot send output to " + outputFile +
+                         " as it exists but is not a file");
+          outputFileError = true;
+        } else if (!outputFile.getParentFile().isDirectory()) {
+          if (!outputFile.getParentFile().mkdirs()) {
+            outputFileError = true;
+          }
+        }
+      }
+      if (!outputFileError && StringUtils.isBlank(outputEncoding)) {
+        outputEncoding = System.getProperty("file.encoding");
+        getLog().warn(
+            "File encoding has not been set, using platform encoding " +
+            outputEncoding + ", i.e. build is platform dependent!");
+      }
     }
+  }
 
-    /**
-     * @return Offset of the configured display terminal width compared to the default with of 80.
-     */
-    protected int getDisplayTerminalWidthOffset() {
-        return this.displayTerminalWidth - DEFAULT_DISPLAY_TERMINAL_WIDTH;
+  protected void logLine(boolean error, String line) {
+    if (logOutput) {
+      if (error) {
+        getLog().error(line);
+      } else {
+        getLog().info(line);
+      }
     }
+    if (outputFile != null && !outputFileError) {
+      try {
+        FileUtils.fileAppend(
+            outputFile.getAbsolutePath(), outputEncoding,
+            error ? "> " + line + System.getProperty("line.separator")
+                  : line + System.getProperty("line.separator"));
+      } catch (IOException e) {
+        getLog().error("Cannot send output to " + outputFile, e);
+        outputFileError = true;
+      }
+    }
+  }
 
+  /**
+   * @return Offset of the configured display terminal width compared to the
+   *     default with of 80.
+   */
+  protected int getDisplayTerminalWidthOffset() {
+    return this.displayTerminalWidth - DEFAULT_DISPLAY_TERMINAL_WIDTH;
+  }
 }
