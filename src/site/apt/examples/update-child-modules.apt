@@ -104,7 +104,12 @@ Reason: Cannot find parent: com.foo.bar:bar for project: com.foo.bar:bar-child:j
 mvn -N versions:update-child-modules
 ---
 
-  Which produces the following output:
+  ## Instructions
+
+To update the child modules' versions, run the following command:
+```
+mvn -N versions:update-child-modules
+```
 
 ---
 [INFO] Scanning for projects...
