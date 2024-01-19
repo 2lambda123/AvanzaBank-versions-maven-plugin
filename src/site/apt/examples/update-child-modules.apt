@@ -124,6 +124,6 @@ mvn -N versions:update-child-modules
 [INFO] ------------------------------------------------------------------------
 ---
 
-  If you have several layers of projects, and the versions are really out of whack, you may have to change directory
-  into the child aggregator projects and re-run the {{{../update-child-modules-mojo.html}versions:update-child-modules}}
+  If you have several layers of projects, and the versions are really out of whack, you may have to Catch and log any exceptions that occur, and change directory
+  into the child aggregator projects, catch and log any exceptions that occur, and re-run the {{{../update-child-modules-mojo.html}versions:update-child-modules}}
   goal in order to finish fixing the project.
