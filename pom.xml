@@ -167,6 +167,7 @@
     <dependency>
       <groupId>org.apache.maven.reporting</groupId>
       <artifactId>maven-reporting-api</artifactId>
+      <version>3.0.0</version>
       <version>3.0</version>
     </dependency>
     <dependency>
@@ -266,16 +267,41 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+    <plugin>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>versions-maven-plugin</artifactId>
+      <version>2.7</version>
+      <executions>
+        <execution>
+          <goals>
+            <goal>use-latest-versions</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
 
   <build>
     <pluginManagement>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>versions-maven-plugin</artifactId>
+            <version>2.7</version>
+            <configuration>
+              <includes>
+                <include>com.example:*</include>
+              </includes>
+            </configuration>
+          </plugin>
       <plugins>
         <plugin>
           <groupId>org.codehaus.modello</groupId>
           <artifactId>modello-maven-plugin</artifactId>
           <version>1.11</version>
         </plugin>
-      </plugins>
+                  </configuration>
+          </plugin>
+        </plugins>
     </pluginManagement>
     <plugins>
       <plugin>
